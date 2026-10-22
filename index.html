@@ -1,0 +1,331 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Casa"><meta name="theme-color" content="#6b3fe0"><title>Casa con ritmo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+body{margin:0}
+/* Layout: app a una colonna su telefono, due su schermo largo. Ogni attività ha il suo colore caramella. */
+:root{
+  --bg:#f7f3ff; --surface:#ffffff; --ink:#2a2140; --muted:#6d6585; --line:#e7e0f5;
+  --accent:#6b3fe0; --accent-ink:#ffffff;
+  --c1:#ff6b6b; --c2:#ffb020; --c3:#20b486; --c4:#3d8bff; --c5:#c35cf0; --c6:#ff7ab8; --c7:#14b8c4;
+  --tint:.14;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Nunito", "Avenir", system-ui, sans-serif;
+  --r:22px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17122a; --surface:#221a3b; --ink:#f3eeff; --muted:#aaa0c6; --line:#352a57;
+  --accent:#a687ff; --accent-ink:#17122a; --tint:.22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17122a; --surface:#221a3b; --ink:#f3eeff; --muted:#aaa0c6; --line:#352a57;
+  --accent:#a687ff; --accent-ink:#17122a; --tint:.22; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;display:grid;gap:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:800 22px var(--display);letter-spacing:-.01em}
+.logo{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:22px;
+  background:conic-gradient(var(--c1) 0 25%,var(--c2) 0 50%,var(--c3) 0 75%,var(--c4) 0);transform:rotate(-6deg)}
+.sync{font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.sync.on i{background:var(--c3)}
+.hero{display:grid;grid-template-columns:1fr minmax(0,320px);gap:20px;align-items:stretch}
+.hello .day{font:700 13px var(--body);text-transform:uppercase;letter-spacing:.12em;color:var(--accent)}
+.hello h1{font:800 clamp(34px,7vw,56px)/1.02 var(--display);letter-spacing:-.03em;margin:8px 0 10px;text-wrap:balance}
+.hello h1 span{background:linear-gradient(transparent 62%,color-mix(in srgb,var(--c2) 55%,transparent) 0)}
+.hello p{margin:0;color:var(--muted);max-width:44ch}
+.score{background:var(--accent);color:var(--accent-ink);border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
+.ring{flex:none;width:96px;height:96px}
+.ring circle{fill:none;stroke-width:11}
+.ring .bgc{stroke:color-mix(in srgb,var(--accent-ink) 22%,transparent)}
+.ring .fg{stroke:var(--c2);stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.3,1.4,.5,1)}
+.ring text{fill:var(--accent-ink);font:800 26px var(--display);font-variant-numeric:tabular-nums}
+.score b{display:block;font:800 20px/1.15 var(--display)}
+.score small{opacity:.85;font-size:14px}
+nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+nav button{flex:none;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 16px;font-weight:800;font-size:15px}
+nav button.active{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface))}
+input[type=date],input[type=text],select{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:8px 12px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:20px;align-items:start}
+.col{display:grid;gap:16px;min-width:0}
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+h2{font:800 24px/1.15 var(--display);letter-spacing:-.02em;margin:0 0 6px;text-wrap:balance}
+.label{font:800 12px var(--body);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:18px 0 8px}
+.list{display:grid;gap:10px}
+.task{--c:var(--accent);display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;
+  background:color-mix(in srgb,var(--c) calc(var(--tint)*100%),var(--surface));border:2px solid transparent;width:100%;text-align:left}
+.task .ico{flex:none;width:46px;height:46px;border-radius:15px;background:var(--c);display:grid;place-items:center;font-size:24px;transition:transform .25s}
+.task .txt{flex:1;min-width:0}
+.task .t{font-weight:800;line-height:1.25}
+.task .d{font-size:13px;color:var(--muted);line-height:1.4;margin-top:2px}
+.tick{flex:none;width:32px;height:32px;border-radius:50%;border:3px solid var(--c);display:grid;place-items:center;font-weight:900;color:#fff;transition:background .2s,transform .2s}
+.task.done .tick{background:var(--c);transform:scale(1.08)}
+.task.done .t{text-decoration:line-through;text-decoration-thickness:2px;opacity:.7}
+.task.done .ico{transform:rotate(-10deg) scale(.92)}
+.task:hover{border-color:var(--c)}
+.tag{font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--surface);color:var(--muted);margin-left:6px;vertical-align:2px;white-space:nowrap}
+.rule{background:color-mix(in srgb,var(--c3) calc(var(--tint)*100%),var(--surface));border-color:transparent}
+.rule h2{font-size:22px}
+.flow{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px;font-weight:800;font-size:14px}
+.flow span{padding:4px 10px;border-radius:999px;background:var(--surface)}
+.btn{border:0;background:var(--ink);color:var(--bg);border-radius:14px;padding:10px 16px;font-weight:800}
+.btn.soft{background:var(--surface);color:var(--ink);border:2px solid var(--line)}
+.recover .row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:2px dashed var(--line)}
+.recover .row:first-of-type{border-top:0}
+.recover .row div{flex:1;min-width:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.dayc{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:170px;min-width:0}
+.dayc.today{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.dayc b{font:800 16px var(--display)}
+.dayc b small{color:var(--muted);font-weight:700}
+.mini{--c:var(--accent);font-size:13px;font-weight:700;padding:5px 8px;border-radius:10px;background:color-mix(in srgb,var(--c) calc(var(--tint)*100%),var(--surface));line-height:1.3}
+.mini.done{text-decoration:line-through;opacity:.65}
+.dayc .btn{margin-top:auto;font-size:13px;padding:7px 10px}
+.load{display:grid;gap:10px}
+.load .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.steps button{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 4px;font-size:12px;font-weight:800;line-height:1.2}
+.steps button.past{background:color-mix(in srgb,var(--c3) calc(var(--tint)*100%),var(--surface));border-color:transparent}
+.steps button.now{background:var(--c3);border-color:var(--c3);color:#fff}
+.x{border:0;background:transparent;font-size:20px;line-height:1;padding:6px 10px;border-radius:10px;color:var(--muted)}
+.x.sure{background:var(--c1);color:#fff;font-size:13px;font-weight:800}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:2px dashed var(--line);flex-wrap:wrap}
+.setrow:first-of-type{border-top:0}
+.setrow label{font-weight:700;display:flex;align-items:center;gap:10px}
+.dot{width:14px;height:14px;border-radius:5px;background:var(--c);flex:none}
+.notice{font-size:13px;border-radius:14px;padding:12px 14px;background:color-mix(in srgb,var(--c2) calc(var(--tint)*100%),var(--surface))}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;padding:12px 18px;border-radius:14px;z-index:20;max-width:calc(100% - 32px)}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:15}
+.confetti i{position:absolute;top:-12px;width:10px;height:14px;border-radius:3px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.2}}
+@keyframes pop{50%{transform:scale(1.25)}}
+.task.just .tick{animation:pop .3s}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.confetti{display:none}}
+@media (max-width:820px){
+  .hero,.grid{grid-template-columns:1fr}
+  .week{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dayc{min-height:130px}
+}
+</style>
+
+</head><body>
+<div class="wrap">
+  <header>
+    <div class="brand"><span class="logo" aria-hidden="true">🏠</span>Casa con ritmo</div>
+    <div class="sync" id="sync"><i></i><span>Salvata su questo dispositivo</span></div>
+  </header>
+
+  <section class="hero">
+    <div class="hello">
+      <div class="day" id="todayLabel"></div>
+      <h1>Una casa curata, <span>un passo alla volta.</span></h1>
+      <p>Oggi fai quello che serve. Il resto ha già il suo giorno.</p>
+    </div>
+    <div class="score">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="bgc" cx="50" cy="50" r="42"/>
+        <circle class="fg" id="ringFg" cx="50" cy="50" r="42" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+        <text x="50" y="59" text-anchor="middle" id="ringTxt">0</text>
+      </svg>
+      <div><b id="scoreTitle">Si comincia</b><small id="scoreText"></small></div>
+    </div>
+  </section>
+
+  <nav aria-label="Sezioni">
+    <button data-tab="today" class="active">Oggi</button>
+    <button data-tab="week">La settimana</button>
+    <button data-tab="laundry">Il bucato</button>
+    <button data-tab="settings">Il tuo ritmo</button>
+  </nav>
+
+  <div id="view"></div>
+</div>
+<div id="toast" hidden role="status"></div>
+
+<script>
+const KEY='casa-ritmo-v1';
+const days=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+const defaults={shower:6,sheets:6,iron:0,towelMode:'twice',towel1:0,towel2:3};
+
+const daily=[
+ {id:'litter',name:'Pulizia lettiera gatti',detail:'Rimuovi i bisogni e riordina intorno alla lettiera.',ico:'🐈',c:'--c2',group:'Durante il giorno',essential:true},
+ {id:'mia-brush',name:'Pettinare Mia',detail:'Un momento dedicato alla cura del suo pelo.',ico:'🪮',c:'--c6',group:'Durante il giorno',essential:false},
+ {id:'roomba',name:'Roomba in zona giorno',detail:'Libera il pavimento e avvia il robot.',ico:'🤖',c:'--c4',group:'Durante il giorno',essential:false},
+ {id:'swiffer',name:'Swiffer su scala e piano di sopra',detail:'Un passaggio veloce sui pavimenti.',ico:'🧹',c:'--c7',group:'Durante il giorno',essential:false},
+ {id:'bath',name:'Bagni, pulizia quotidiana',detail:'Lavabo, sanitari e superfici usate.',ico:'🫧',c:'--c4',group:'Durante il giorno',essential:true},
+ {id:'wash',name:'Bucato, chiudi il giro',detail:'Se hai lavato: asciuga, piega e riponi subito. Nella cesta solo ciò che va stirato.',ico:'🧺',c:'--c3',group:'Durante il giorno',essential:true},
+ {id:'kitchen',name:'Cucina in ordine',detail:'Piatti sistemati, piano e lavello puliti. Pronta per domani.',ico:'🍽️',c:'--c1',group:'Prima di chiudere la giornata',essential:true}
+];
+const weekly={
+ shower:{id:'shower',name:'Doccia, pulizia completa',detail:'Pareti, piatto, rubinetteria e vetro.',ico:'🚿',c:'--c7'},
+ sheets:{id:'sheets',name:'Cambio lenzuola',detail:'Togli, sostituisci e avvia il lavaggio quando puoi.',ico:'🛏️',c:'--c5'},
+ iron:{id:'iron',name:'Il giorno dello stiro',detail:'Svuota la cesta e riponi subito i capi stirati.',ico:'👕',c:'--c2'},
+ towels:{id:'towels',name:'Cambio asciugamani',detail:'Sostituisci quelli di tutti i bagni.',ico:'🧻',c:'--c6'}
+};
+
+/* ---------- stato ---------- */
+function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function date(s){return new Date(s+'T12:00:00')}
+function normalize(s){s=s||{};return{settings:{...defaults,...(s.settings||{})},done:s.done||{},loads:Array.isArray(s.loads)?s.loads:[],start:s.start||dateKey(new Date())}}
+let state;
+try{state=normalize(JSON.parse(localStorage.getItem(KEY)))}catch{state=normalize()}
+let tab='today',selected=dateKey(new Date()),essential=false,justId=null,sureDelete=null,pendingImport=null;
+let docRef=null,writing=Promise.resolve(),writeTimer=null,localDirty=false;
+
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
+function save(){
+  saveLocal();
+  if(!docRef)return;
+  localDirty=true;
+  clearTimeout(writeTimer);
+  writeTimer=setTimeout(()=>{
+    const snap=JSON.parse(JSON.stringify(state));
+    writing=writing.then(()=>docRef.set(snap)).then(()=>{localDirty=false;setSync(true)})
+      .catch(()=>{setSync(false,'Non salvato online, riprova più tardi')});
+  },400);
+}
+function setSync(on,msg){const el=document.getElementById('sync');el.classList.toggle('on',on);el.querySelector('span').textContent=msg||(on?'Sincronizzata':'Salvata su questo dispositivo')}
+
+async function connect(){
+  let db=null;
+  try{db=await window.claude?.use?.('db')}catch{db=null}
+  if(!db)return;
+  docRef=db.doc('casa/stato');
+  try{
+    const first=await docRef.get();
+    if(first.exists){state=normalize(first.data());saveLocal();render()}
+    else{await docRef.set(JSON.parse(JSON.stringify(state)))}
+    setSync(true);
+  }catch{setSync(false,'Collegamento non riuscito');return}
+  docRef.onSnapshot(snap=>{
+    if(!snap.exists||localDirty)return;
+    const incoming=normalize(snap.data());
+    if(JSON.stringify(incoming)!==JSON.stringify(state)){state=incoming;saveLocal();render()}
+  },()=>setSync(false,'Sincronizzazione in pausa'));
+}
+
+/* ---------- logica ---------- */
+function extras(d){
+  const w=d.getDay(),s=state.settings,arr=[];
+  if(w==s.shower)arr.push(weekly.shower);
+  if(w==s.sheets)arr.push(weekly.sheets);
+  if(w==s.iron)arr.push(weekly.iron);
+  const weeks=Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,5))/604800000);
+  if((s.towelMode==='twice'&&(w==s.towel1||w==s.towel2))||(s.towelMode==='fortnight'&&w==s.towel1&&weeks%2===0))arr.push(weekly.towels);
+  return arr.map(x=>({...x,essential:false,group:'Il compito della settimana'}));
+}
+function tasks(d){return[...daily,...extras(d)]}
+function isDone(id,key=selected){return!!state.done[key]?.[id]}
+function toggle(id){state.done[selected]??={};const v=!isDone(id);state.done[selected][id]=v;justId=v?id:null;save();render();
+  const today=dateKey(new Date());if(v&&selected===today&&tasks(new Date()).every(t=>isDone(t.id,today)))confetti()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toast(s){const t=document.getElementById('toast');t.textContent=s;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
+function confetti(){const box=document.createElement('div');box.className='confetti';const cols=['--c1','--c2','--c3','--c4','--c5','--c6'];
+  for(let i=0;i<60;i++){const p=document.createElement('i');p.style.left=Math.random()*100+'%';p.style.background=`var(${cols[i%6]})`;p.style.animationDelay=Math.random()*.5+'s';box.appendChild(p)}
+  document.body.appendChild(box);setTimeout(()=>box.remove(),2400)}
+
+function recoveries(today){const found=[];
+  for(let n=1;n<=7;n++){const d=date(today);d.setDate(d.getDate()-n);const key=dateKey(d);if(key<state.start)continue;
+    extras(d).forEach(t=>{if(!isDone(t.id,key)&&!found.some(f=>f.id===t.id)&&!isDone(t.id,today))found.push({...t,key})})}
+  if(!found.length)return'';
+  return`<div class="panel recover"><h2>Da recuperare</h2><p class="muted small">Gli ultimi 7 giorni. Quando lo fai, segnalo qui.</p>${found.map(t=>`<div class="row"><span class="dot" style="--c:var(${t.c});background:var(${t.c})"></span><div><b>${t.name}</b><div class="small muted">Previsto ${date(t.key).toLocaleDateString('it-IT',{weekday:'long',day:'numeric'})}</div></div><button class="btn" data-recover="${t.id}" data-key="${t.key}">Fatto</button></div>`).join('')}</div>`}
+
+function taskRow(t){const d=isDone(t.id),wk=!daily.some(x=>x.id===t.id);
+  return`<button class="task ${d?'done':''} ${justId===t.id?'just':''}" style="--c:var(${t.c})" data-task="${t.id}" aria-pressed="${d}"><span class="ico" aria-hidden="true">${t.ico}</span><span class="txt"><span class="t">${t.name}${wk?'<span class="tag">settimanale</span>':''}</span><span class="d" style="display:block">${t.detail}</span></span><span class="tick" aria-hidden="true">${d?'✓':''}</span></button>`}
+
+/* ---------- viste ---------- */
+function render(){
+  const now=new Date(),today=dateKey(now),tNow=tasks(now),done=tNow.filter(t=>isDone(t.id,today)).length,tot=tNow.length;
+  document.getElementById('todayLabel').textContent=now.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('ringFg').style.strokeDashoffset=263.9*(1-done/tot);
+  document.getElementById('ringTxt').textContent=done+'/'+tot;
+  document.getElementById('scoreTitle').textContent=done===tot?'Giornata chiusa!':done===0?'Si comincia':done>=tot/2?'Ci sei quasi':'Bel ritmo';
+  document.getElementById('scoreText').textContent=done===tot?'Goditi la casa.':'Una cosa alla volta, senza rincorrere tutto.';
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  let html='';
+
+  if(tab==='today'){
+    const all=tasks(date(selected)),vis=essential?all.filter(t=>t.essential):all;
+    const groups=['Durante il giorno','Il compito della settimana','Prima di chiudere la giornata'];
+    html=`<div class="grid"><div class="col"><div class="tools"><input type="date" id="date" aria-label="Giorno" value="${selected}">${selected!==today?'<button class="chip" id="resetdate">Torna a oggi</button>':''}<button class="chip" id="essential" aria-pressed="${essential}">${essential?'✓ ':''}Solo l’essenziale</button></div>
+    <section class="panel"><h2>${selected===today?'Il tuo oggi':date(selected).toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})}</h2>
+    ${essential?'<p class="notice">Lettiera, bagni, bucato e cucina. Se oggi hai poca energia, parti da qui.</p>':''}
+    ${groups.map(g=>{const l=vis.filter(t=>t.group===g);return l.length?`<div class="label">${g}</div><div class="list">${l.map(taskRow).join('')}</div>`:''}).join('')}</section></div>
+    <aside class="col"><div class="panel rule"><div class="label" style="margin-top:0">La regola che aiuta</div><h2>Il bucato finisce nell’armadio.</h2><div class="flow"><span>asciutto</span><span>piegato</span><span>riposto</span></div><p class="small" style="margin:0 0 12px">Nella cesta restano solo i capi da stirare.</p><button class="btn" data-go="laundry">Segui il bucato</button></div>${recoveries(today)}</aside></div>`;
+  }
+
+  if(tab==='week'){
+    const mon=new Date(now);mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
+    html='<section class="col"><div><h2>Una cosa in più, nel giorno giusto.</h2><p class="muted" style="margin:0">La routine di ogni giorno resta uguale. Qui vedi gli appuntamenti della settimana.</p></div><div class="week">';
+    for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(d.getDate()+i);const key=dateKey(d);
+      const ex=extras(d);
+      html+=`<div class="dayc ${key===today?'today':''}"><b>${days[d.getDay()]} <small>${d.getDate()}</small></b>${ex.map(t=>`<div class="mini ${isDone(t.id,key)?'done':''}" style="--c:var(${t.c})">${t.ico} ${t.name}</div>`).join('')||'<span class="small muted">Solo la routine.</span>'}<button class="btn soft" data-date="${key}">Apri</button></div>`}
+    html+='</div></section>';
+  }
+
+  if(tab==='laundry'){
+    const stages=['In lavatrice','Asciugatrice','Da piegare','Riposto ✓'];
+    html=`<div class="grid"><div class="col"><div><h2>Un carico, fino in fondo.</h2><p class="muted" style="margin:0">Registra solo i lavaggi che fai e portali fino all’armadio.</p></div>
+    <form id="newload" class="tools"><input type="text" required maxlength="60" id="loadname" placeholder="Es. colorati, lenzuola…" aria-label="Nome del carico" style="flex:1;min-width:0"><button class="btn">+ Nuovo carico</button></form>
+    ${state.loads.length?state.loads.map(l=>`<div class="panel load"><div class="top"><div><b>${esc(l.name)}</b><div class="small muted">${esc(l.date)} · ${l.stage===3?'Giro chiuso':'Passaggio '+(l.stage+1)+' di 4'}</div></div><button class="x ${sureDelete===l.id?'sure':''}" data-delete="${l.id}" aria-label="Elimina carico">${sureDelete===l.id?'Elimina':'×'}</button></div><div class="steps">${stages.map((s,i)=>`<button class="${i<l.stage?'past':''} ${i===l.stage?'now':''}" data-load="${l.id}" data-stage="${i}" aria-pressed="${i===l.stage}">${s}</button>`).join('')}</div></div>`).join(''):'<div class="panel muted">Nessun carico registrato. Aggiungi il prossimo lavaggio.</div>'}</div>
+    <aside class="panel" style="background:color-mix(in srgb,var(--c2) calc(var(--tint)*100%),var(--surface));border-color:transparent"><h2>La cesta dello stiro</h2><p class="small">Qui va soltanto ciò che si stira. Il resto si piega e si ripone appena asciutto.</p><p style="margin:0"><b>Il tuo giorno: ${days[state.settings.iron].toLowerCase()}.</b></p></aside></div>`;
+  }
+
+  if(tab==='settings'){
+    const rows=[['shower','Doccia','--c7'],['sheets','Lenzuola','--c5'],['iron','Stiro','--c2'],['towel1',state.settings.towelMode==='twice'?'Asciugamani, primo giorno':'Asciugamani','--c6']];
+    if(state.settings.towelMode==='twice')rows.push(['towel2','Asciugamani, secondo giorno','--c6']);
+    html=`<div class="grid"><section class="panel"><h2>Una settimana che segue te.</h2><p class="muted small">Sposta i giorni come preferisci. Le modifiche valgono anche per il calendario passato.</p>
+    ${rows.map(([k,n,c])=>`<div class="setrow"><label for="set-${k}"><span class="dot" style="background:var(${c})"></span>${n}</label><select id="set-${k}" data-setting="${k}">${days.map((v,i)=>`<option value="${i}" ${state.settings[k]==i?'selected':''}>${v}</option>`).join('')}</select></div>`).join('')}
+    <div class="setrow"><label for="towelMode"><span class="dot" style="background:var(--c6)"></span>Frequenza asciugamani</label><select id="towelMode"><option value="twice" ${state.settings.towelMode==='twice'?'selected':''}>2 volte a settimana</option><option value="fortnight" ${state.settings.towelMode==='fortnight'?'selected':''}>Ogni 2 settimane</option></select></div></section>
+    <aside class="col"><div class="panel"><h2>Su iPhone</h2><p class="small">Apri il link in Safari, poi Condividi e Aggiungi alla schermata Home. Le spunte restano salvate su questo telefono: ogni tanto fai un backup.</p><button class="btn" id="export">Esporta backup</button></div>
+    <div class="panel"><h2>Porta i dati dalla vecchia app</h2><p class="small">Nella vecchia app: Il tuo ritmo, Esporta backup. Poi scegli qui il file.</p>
+    ${pendingImport?`<p class="notice">Il backup sostituisce i dati attuali.</p><div class="tools"><button class="btn" id="doImport">Sostituisci i dati</button><button class="chip" id="cancelImport">Annulla</button></div>`:`<label class="btn soft" style="display:inline-block" for="import">Scegli il file di backup</label><input type="file" accept="application/json,.json" id="import" hidden>`}</div></aside></div>`;
+  }
+
+  document.getElementById('view').innerHTML=html;
+  justId=null;
+  bind();
+}
+
+function bind(){
+  const $=id=>document.getElementById(id);
+  document.querySelectorAll('[data-task]').forEach(b=>b.onclick=()=>toggle(b.dataset.task));
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render()});
+  document.querySelectorAll('[data-date]').forEach(b=>b.onclick=()=>{selected=b.dataset.date;tab='today';render()});
+  document.querySelectorAll('[data-recover]').forEach(b=>b.onclick=()=>{state.done[b.dataset.key]??={};state.done[b.dataset.key][b.dataset.recover]=true;save();render();toast('Recuperato!')});
+  document.querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>{const l=state.loads.find(x=>x.id===b.dataset.load);if(!l)return;l.stage=+b.dataset.stage;save();render();if(l.stage===3)toast('Giro chiuso, ben fatto.')});
+  document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const id=b.dataset.delete;
+    if(sureDelete===id){state.loads=state.loads.filter(l=>l.id!==id);sureDelete=null;save();render()}
+    else{sureDelete=id;render();setTimeout(()=>{if(sureDelete===id){sureDelete=null;render()}},4000)}});
+  document.querySelectorAll('[data-setting]').forEach(s=>s.onchange=()=>{const v=+s.value,k=s.dataset.setting;
+    if((k==='towel1'&&v==state.settings.towel2&&state.settings.towelMode==='twice')||(k==='towel2'&&v==state.settings.towel1)){toast('Scegli due giorni diversi per gli asciugamani.');render();return}
+    state.settings[k]=v;save();render()});
+  if($('towelMode'))$('towelMode').onchange=e=>{state.settings.towelMode=e.target.value;if(e.target.value==='twice'&&state.settings.towel2===state.settings.towel1)state.settings.towel2=(state.settings.towel1+3)%7;save();render()};
+  if($('date'))$('date').onchange=e=>{if(e.target.value){selected=e.target.value;render()}};
+  if($('resetdate'))$('resetdate').onclick=()=>{selected=dateKey(new Date());render()};
+  if($('essential'))$('essential').onclick=()=>{essential=!essential;render()};
+  if($('newload'))$('newload').onsubmit=e=>{e.preventDefault();const name=$('loadname').value.trim();if(!name)return;
+    state.loads.unshift({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),name,stage:0,date:new Date().toLocaleDateString('it-IT')});save();render()};
+  if($('import'))$('import').onchange=async e=>{try{const s=JSON.parse(await e.target.files[0].text());
+    if(!s.settings||!s.done||!Array.isArray(s.loads))throw Error();pendingImport=s;render()}catch{toast('Il file non è un backup valido.')}};
+  if($('export'))$('export').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));a.download='casa-con-ritmo-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+  if($('doImport'))$('doImport').onclick=()=>{state=normalize({...pendingImport,start:pendingImport.start||state.start});pendingImport=null;save();render();toast('Backup importato.')};
+  if($('cancelImport'))$('cancelImport').onclick=()=>{pendingImport=null;render()};
+}
+
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;sureDelete=null;render()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
+render();
+</script>
+
+</body></html>
